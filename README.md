@@ -6,7 +6,7 @@ Arxiv: 565
 
 
 **2.**
-Modify the address for these 5 args: 'trigger_generator_address', 'poison_', 'poison_edge_index', 'poison_edge_weights', 'poison_labels', 'idx_attach'
+Modify the address for these 5 args: 'trigger_generator_address', 'poison_x', 'poison_edge_index', 'poison_edge_weights', 'poison_labels', 'idx_attach'
 
 **Cora**
 
