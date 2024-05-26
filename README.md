@@ -7,20 +7,14 @@ Arxiv: 565
 
 **Cora**
 
-defense_cora_UGBA.ipynb
-
-trigger generator weight: './model_weights_cora.pth'
+python defense.py --dataset Cora --vs_number 40
 
 **PubMed**
 
-defense_pubmed_UGBA.ipynb
-
-trigger generator weight: './UGBA/model_weights_pubmed.pth'
+python defense.py --dataset Pubmed --vs_number 160
 
 **OGB-arxiv**
 
-defense_arxiv_UGBA.ipynb
-
-trigger generator weight: './model_weights_arxiv.pth'
+python defense.py --dataset ogbn-arxiv --vs_number 565
 
 
