@@ -491,7 +491,7 @@ class Backdoor:
 
         return loss
 
-    def fit(self, features, edge_index, edge_weight, labels, idx_train, idx_attach,idx_unlabeled,test=False):
+    def fit(self, features, edge_index, edge_weight, labels, idx_train, idx_attach,idx_unlabeled, address= '', test=False):
         
         args = self.args
         if edge_weight is None:
@@ -521,21 +521,7 @@ class Backdoor:
         optimizer_detector = optim.Adam(self.ood_detector.parameters(), lr=args.lr, weight_decay=args.weight_decay)
         optimizer_trigger = optim.Adam(self.trojan.parameters(), lr=args.lr, weight_decay=args.weight_decay)
 
-        # find representative nodes in idx_unlabeled
-
-        features_select = features[torch.cat([idx_train, idx_attach, idx_unlabeled])]
-        AE = MLPAE(features_select, features_select, self.device, args.rec_epochs)
-        AE.fit()
-        rec_score_ori = AE.inference(features_select)
-        mean_ori = torch.mean(rec_score_ori)
-        std_ori = torch.std(rec_score_ori)
-        # print('mean',mean_ori)
-        # print('std',std_ori)
-        condition = torch.abs(rec_score_ori - mean_ori) < args.range*std_ori
-
-        # Apply the condition to filter the features
-        selected_features = features_select[condition]
-        # print(len(selected_features))
+        
         
 
     
@@ -551,6 +537,8 @@ class Backdoor:
 
 
         # furture change it to bilevel optimization
+
+        address = address
         
         if test==True:
             # state_dict = torch.load('model_weights.pth')
@@ -558,7 +546,8 @@ class Backdoor:
            
             
             ## UGBA
-            state_dict = torch.load('./model_weights_cora.pth')
+            # state_dict = torch.load('./model_weights_cora.pth')
+            state_dict = torch.load(address)
             # state_dict = torch.load('./model_weights_arxiv.pth')
             # state_dict = torch.load('./UGBA/model_weights_pubmed.pth')
 

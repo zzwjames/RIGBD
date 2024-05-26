@@ -55,7 +55,7 @@ class GCN(nn.Module):
         features = x
         # print('features',features)
         x = self.gc2(x, edge_index,edge_weight)
-        return F.log_softmax(x,dim=1), features
+        return F.log_softmax(x,dim=1)
     def get_h(self, x, edge_index):
 
         for conv in self.convs:
@@ -120,7 +120,7 @@ class GCN(nn.Module):
         for i in range(train_iters):
             self.train()
             optimizer.zero_grad()
-            output, x = self.forward(self.features, self.edge_index, self.edge_weight)
+            output = self.forward(self.features, self.edge_index, self.edge_weight)
             loss_train = F.nll_loss(output[idx1], labels[idx1])
             probs = F.softmax(output[idx2], dim=1)
             target_probs = probs[range(len(labels[idx2])), labels[idx2]]
@@ -224,7 +224,7 @@ class GCN(nn.Module):
         for i in range(train_iters):
             self.train()
             optimizer.zero_grad()
-            output, x = self.forward(self.features, self.edge_index, self.edge_weight)
+            output = self.forward(self.features, self.edge_index, self.edge_weight)
             loss_train = F.nll_loss(output[idx_train], labels[idx_train])
             # print(labels[idx_train])
             loss_train.backward()
@@ -233,7 +233,7 @@ class GCN(nn.Module):
 
 
             self.eval()
-            output, x = self.forward(self.features, self.edge_index, self.edge_weight)
+            output = self.forward(self.features, self.edge_index, self.edge_weight)
             loss_val = F.nll_loss(output[idx_val], labels[idx_val])
             acc_val = utils.accuracy(output[idx_val], labels[idx_val])
             
@@ -261,7 +261,7 @@ class GCN(nn.Module):
         self.eval()
         # print(labels[idx_test])
         with torch.no_grad():
-            output, x = self.forward(features, edge_index, edge_weight)
+            output = self.forward(features, edge_index, edge_weight)
             # print(torch.exp(output[idx_test]))
             # print(output[idx_test].max(1)[1])
             acc_test = utils.accuracy(output[idx_test], labels[idx_test])
