@@ -85,10 +85,7 @@ parser.add_argument('--poison_x', type=str, default='poison_x_cora.pt')
 parser.add_argument('--poison_edge_index', type=str, default='poison_edge_index_cora.pt')
 parser.add_argument('--poison_edge_weights', type=str, default='poison_edge_weights_cora.pt')
 parser.add_argument('--poison_labels', type=str, default='poison_labels_cora.pt')
-parser.add_argument('--idx_attach', type=list, default=[2183, 2202,  980, 1291, 2630, 2530,  376,  590, 1220,  574,  276,   15, 
-2049, 2117, 2535, 1505, 2665, 1469,  316, 1201,  511,  700, 1259,  357,
-        1754,  228, 2290, 1019, 2546,  958, 1263, 2556, 2003,   51,  342,  711,
-        2305,  461, 1246, 1850])
+parser.add_argument('--idx_attach', type=str, default='Cora_UGBA.txt')
 
 # GPU setting
 parser.add_argument('--device_id', type=int, default=3,
@@ -151,55 +148,23 @@ mask_edge_index = data.edge_index[:,torch.bitwise_not(edge_mask)]
 from sklearn_extra import cluster
 from models.backdoor import Backdoor
 from models.construct import model_construct
-import heuristic_selection as hs
 from torch.distributions.bernoulli import Bernoulli
-
-# select poisoned target node #
-
-# filter out the unlabeled nodes except from training nodes and testing nodes, nonzero() is to get index, flatten is to get 1-d tensor
-unlabeled_idx = (torch.bitwise_not(data.test_mask)&torch.bitwise_not(data.train_mask)).nonzero().flatten()
-if(args.use_vs_number):
-    size = args.vs_number
-else:
-    size = int((len(data.test_mask)-data.test_mask.sum())*args.vs_ratio)
-# print("#Attach Nodes:{}".format(size))
-assert size>0, 'The number of selected trigger nodes must be larger than 0!'
-# here is randomly select poison nodes from unlabeled nodes
-if(args.selection_method == 'none'):
-    idx_attach = hs.obtain_attach_nodes(args,unlabeled_idx,size)
-elif(args.selection_method == 'cluster'):
-    idx_attach = hs.cluster_distance_selection(args,data,idx_train,idx_val,idx_clean_test,unlabeled_idx,train_edge_index,size,device)
-    idx_attach = torch.LongTensor(idx_attach).to(device)
-elif(args.selection_method == 'cluster_degree'):
-    if(args.dataset == 'Pubmed'):
-        idx_attach = hs.cluster_degree_selection_seperate_fixed(args,data,idx_train,idx_val,idx_clean_test,unlabeled_idx,train_edge_index,size,device)
-    else:
-        idx_attach = hs.cluster_degree_selection(args,data,idx_train,idx_val,idx_clean_test,unlabeled_idx,train_edge_index,size,device)
-    idx_attach = torch.LongTensor(idx_attach).to(device)
-# print("idx_attach: {}".format(idx_attach))
-unlabeled_idx = torch.tensor(list(set(unlabeled_idx.cpu().numpy()) - set(idx_attach.cpu().numpy()))).to(device)
-# print('number of benign training nodes', len(idx_train))
-
-
-
-
 from sklearn_extra import cluster
 from models.backdoor import Backdoor
 from models.construct import model_construct
-import heuristic_selection as hs
 from torch.distributions.bernoulli import Bernoulli
 
 unlabeled_idx = (torch.bitwise_not(data.test_mask)&torch.bitwise_not(data.train_mask)).nonzero().flatten()
 
-# Cora
-# idx_attach = torch.tensor([2183, 2202,  980, 1291, 2630, 2530,  376,  590, 1220,  574,  276,   15,
-#         2049, 2117, 2535, 1505, 2665, 1469,  316, 1201,  511,  700, 1259,  357,
-#         1754,  228, 2290, 1019, 2546,  958, 1263, 2556, 2003,   51,  342,  711,
-#         2305,  461, 1246, 1850])
-idx_attach = torch.tensor(args.idx_attach)
+import ast
+with open(args.idx_attach, 'r') as file:
+    content = file.read()
+    idx_attach = ast.literal_eval(content)
 
-
+idx_attach = torch.tensor(idx_attach)
 idx_attach = idx_attach.to(device)
+
+# print(idx_attach)
 
 #### load trigger generator and poisoned data ####
 trigger_generator_address = args.trigger_generator_address
