@@ -3,8 +3,6 @@ Pubmed: 160
 Arxiv: 565
 
 
-# UGBA
-
 **Cora**
 
 python defense.py --dataset Cora --vs_number 40
