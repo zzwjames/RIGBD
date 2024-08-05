@@ -145,11 +145,11 @@ mask_edge_index = data.edge_index[:,torch.bitwise_not(edge_mask)]
 
 
 
-from sklearn_extra import cluster
+# from sklearn_extra import cluster
 from models.backdoor import Backdoor
 from models.construct import model_construct
 from torch.distributions.bernoulli import Bernoulli
-from sklearn_extra import cluster
+# from sklearn_extra import cluster
 from models.backdoor import Backdoor
 from models.construct import model_construct
 from torch.distributions.bernoulli import Bernoulli
@@ -220,7 +220,7 @@ print("CA: {:.4f}".format(ca))
 
 ###### formal test ########
 
-test_model = model_construct(args,args.test_model,data,device).to(device) 
+test_model = model_construct(args,args.test_model,data,device,add_self_loops=False).to(device) 
 test_model.fit(poison_x,poison_edge_index, poison_edge_weights, poison_labels, bkd_tn_nodes, idx_val,train_iters=args.epochs,verbose=False)
 test_model.eval()
 clean_acc = test_model.test(poison_x,poison_edge_index, poison_edge_weights,poison_labels,idx_attach)
@@ -229,28 +229,60 @@ ori_predict = torch.exp(output_clean[known_nodes])
 print("accuracy on poisoned target nodes: {:.4f}".format(clean_acc))
 
 drop_ratio = 0.5
-def sample_noise_all(edge_index, edge_weight,device):
-    noisy_edge_index = edge_index.clone().detach()
-    if(edge_weight == None):
-        noisy_edge_weight = torch.ones([noisy_edge_index.shape[1],]).to(device)
+def sample_noise_all(edge_index, edge_weight, device):
+    # Ensure inputs are on the correct device
+    edge_index = edge_index.to(device)
+    if edge_weight is None:
+        edge_weight = torch.ones(edge_index.size(1), device=device)
     else:
-        noisy_edge_weight = edge_weight.clone().detach()
-    # # rand_noise_data = copy.deepcopy(data)
-    # rand_noise_data.edge_weight = torch.ones([rand_noise_data.edge_index.shape[1],]).to(device)
-    m = Bernoulli(torch.tensor([1-drop_ratio]).to(device))
-    mask = m.sample(noisy_edge_weight.shape).squeeze(-1).int()
-    # print('mask',mask)
-    rand_inputs = torch.randint_like(noisy_edge_weight, low=0, high=2).squeeze().int().to(device)
-    # print(rand_noise_data.edge_weight.shape,mask.shape)
-    noisy_edge_weight = noisy_edge_weight * mask #+ rand_inputs * (1-mask)
-        
-    if(noisy_edge_weight!=None):
-        noisy_edge_index = noisy_edge_index[:,noisy_edge_weight.nonzero().flatten().long()]
-        noisy_edge_weight = torch.ones([noisy_edge_index.shape[1],]).to(device)
+        edge_weight = edge_weight.to(device)
+
+    # Generate mask for edge dropping
+    drop_mask = Bernoulli(1 - drop_ratio).sample(edge_weight.size()).bool()
+
+    # Apply mask to edges
+    noisy_edge_index = edge_index[:, drop_mask]
+    noisy_edge_weight = edge_weight[drop_mask]
+
+    # Get node degrees
+    node_degrees = torch.zeros(edge_index.max() + 1, device=device)
+    node_degrees.index_add_(0, noisy_edge_index[0], torch.ones(noisy_edge_index.size(1), device=device))
+    # print('degree', node_degrees)
+
+    # Restore edges for isolated nodes
+    isolated_nodes = node_degrees == 0
+    # print('isolated_nodes', isolated_nodes)
+    if isolated_nodes.any():
+        potential_restore_edges = isolated_nodes[edge_index[0]]
+        # print('potential_restore_edges', potential_restore_edges)
+        restore_edges = edge_index[:, potential_restore_edges]
+        noisy_edge_index = torch.cat([noisy_edge_index, restore_edges], dim=1)
+        restored_weights = torch.ones(restore_edges.size(1), device=device)
+        noisy_edge_weight = torch.cat([noisy_edge_weight, restored_weights], dim=0)
+
     return noisy_edge_index, noisy_edge_weight
+# def sample_noise_all(edge_index, edge_weight,device):
+#     noisy_edge_index = edge_index.clone().detach()
+#     if(edge_weight == None):
+#         noisy_edge_weight = torch.ones([noisy_edge_index.shape[1],]).to(device)
+#     else:
+#         noisy_edge_weight = edge_weight.clone().detach()
+#     # # rand_noise_data = copy.deepcopy(data)
+#     # rand_noise_data.edge_weight = torch.ones([rand_noise_data.edge_index.shape[1],]).to(device)
+#     m = Bernoulli(torch.tensor([1-drop_ratio]).to(device))
+#     mask = m.sample(noisy_edge_weight.shape).squeeze(-1).int()
+#     # print('mask',mask)
+#     rand_inputs = torch.randint_like(noisy_edge_weight, low=0, high=2).squeeze().int().to(device)
+#     # print(rand_noise_data.edge_weight.shape,mask.shape)
+#     noisy_edge_weight = noisy_edge_weight * mask #+ rand_inputs * (1-mask)
+        
+#     if(noisy_edge_weight!=None):
+#         noisy_edge_index = noisy_edge_index[:,noisy_edge_weight.nonzero().flatten().long()]
+#         noisy_edge_weight = torch.ones([noisy_edge_index.shape[1],]).to(device)
+#     return noisy_edge_index, noisy_edge_weight
 
 predictions = []
-K=10
+K=20
 for i in range(K):
             test_model.eval()
             noisy_poison_edge_index, noisy_poison_edge_weights = sample_noise_all(poison_edge_index, poison_edge_weights, device)
