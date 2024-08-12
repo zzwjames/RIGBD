@@ -6,7 +6,7 @@ from models.GCN_Encoder import GCN_Encoder
 from models.GNNGuard import GNNGuard
 from models.RobustGCN import RobustGCN
 
-def model_construct(args,model_name,data,device):
+def model_construct(args,model_name,data,device,add_self_loops=True):
     if(args.dataset == 'Reddit2'):
         use_ln = True
         layer_norm_first = False
@@ -23,7 +23,8 @@ def model_construct(args,model_name,data,device):
                     weight_decay=args.weight_decay,\
                     device=device,
                     use_ln=use_ln,
-                    layer_norm_first=layer_norm_first)
+                    layer_norm_first=layer_norm_first,
+                    add_self_loops=add_self_loops)
         
     elif(model_name == 'GAT'):
         model = GAT(nfeat=data.x.shape[1], 
