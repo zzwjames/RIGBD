@@ -1,8 +1,6 @@
 **dataset:** {Cora, PubMed, OGB-arxiv},  
 **vs_number:** {Cora: 40, Pubmed: 160, OGB-arxiv: 565} 
 
-Code Link for paper "Rethinking Graph Backdoor Attacks: A Distribution-Preserving Perspective": https://github.com/zzwjames/DPGBA/tree/main
-
 
 **1.** Download the weights, poisoned graph, and idx_attach from here: https://www.dropbox.com/scl/fo/iw2nouqgqx7nz7y32043w/AMAJNKdEMfBz0v-H6omERS0?rlkey=2d3ane6ak6kzhv79xsvhx2j72&e=1&st=4d7rd61z&dl=0
 
