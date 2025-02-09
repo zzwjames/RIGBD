@@ -35,3 +35,13 @@ python defense.py --dataset Pubmed --vs_number 160 --trigger_generator_address '
 python defense.py --dataset ogbn-arxiv --vs_number 565 --trigger_generator_address './model_weights_arxiv.pth' --poison_x 'poison_x_arxiv.pt' --poison_edge_index 'poison_edge_index_arxiv.pt' --poison_edge_weights 'poison_edge_weights_arxiv.pt' --poison_labels 'poison_labels_arxiv.pt' --idx_attach 'OGBArxiv_UGBA.txt'
 
 
+If you find this repo to be useful, please consider cite our paper. Thank you.
+
+    @inproceedings{
+    zhang2025robustness,
+    title={Robustness Inspired Graph Backdoor Defense},
+    author={Zhiwei Zhang and Minhua Lin and Junjie Xu and Zongyu Wu and Enyan Dai and Suhang Wang},
+    booktitle={The Thirteenth International Conference on Learning Representations},
+    year={2025},
+    url={https://openreview.net/forum?id=trKNi4IUiP}
+    }
