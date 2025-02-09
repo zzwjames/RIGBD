@@ -1,4 +1,4 @@
-## Robustness Inspired Graph Backdoor Defense [ICLR 25] [paper](https://openreview.net/forum?id=trKNi4IUiP&referrer=%5BAuthor%20Console%5D(%2Fgroup%3Fid%3DICLR.cc%2F2025%2FConference%2FAuthors%23your-submissions))
+## Robustness Inspired Graph Backdoor Defense [ICLR 25] [\[paper]\](https://openreview.net/forum?id=trKNi4IUiP&referrer=%5BAuthor%20Console%5D(%2Fgroup%3Fid%3DICLR.cc%2F2025%2FConference%2FAuthors%23your-submissions))
 
 **dataset:** {Cora, PubMed, OGB-arxiv},  
 **vs_number:** {Cora: 40, Pubmed: 160, OGB-arxiv: 565} 
