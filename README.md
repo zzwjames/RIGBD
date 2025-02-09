@@ -1,8 +1,5 @@
 ## Robustness Inspired Graph Backdoor Defense [ICLR 25] [[paper]](https://openreview.net/forum?id=trKNi4IUiP&referrer=%5BAuthor%20Console%5D(%2Fgroup%3Fid%3DICLR.cc%2F2025%2FConference%2FAuthors%23your-submissions))
 
-**dataset:** {Cora, PubMed, OGB-arxiv},  
-**vs_number:** {Cora: 40, Pubmed: 160, OGB-arxiv: 565} 
-
 
 **1.** Download the weights, poisoned graph, and idx_attach from here: https://www.dropbox.com/scl/fo/iw2nouqgqx7nz7y32043w/AMAJNKdEMfBz0v-H6omERS0?rlkey=2d3ane6ak6kzhv79xsvhx2j72&e=1&st=4d7rd61z&dl=0
 
