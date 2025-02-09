@@ -1,3 +1,5 @@
+*Robustness Inspired Graph Backdoor Defense [ICLR 25]*
+
 **dataset:** {Cora, PubMed, OGB-arxiv},  
 **vs_number:** {Cora: 40, Pubmed: 160, OGB-arxiv: 565} 
 
