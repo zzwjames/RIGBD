@@ -16,7 +16,7 @@
 
   
 
-python defense.py --dataset Cora --vs_number 40 --trigger_generator_address './model_weights_cora.pth' --poison_x 'poison_x_cora.pt' --poison_edge_index 'poison_edge_index_cora.pt' --poison_edge_weights 'poison_edge_weights_cora.pt' --poison_labels 'poison_labels_cora.pt' --idx_attach 'Cora_UGBA.txt'
+    python defense.py --dataset Cora --vs_number 40 --trigger_generator_address './model_weights_cora.pth' --poison_x 'poison_x_cora.pt' --poison_edge_index 'poison_edge_index_cora.pt' --poison_edge_weights 'poison_edge_weights_cora.pt' --poison_labels 'poison_labels_cora.pt' --idx_attach 'Cora_UGBA.txt'
 
   
 
@@ -24,7 +24,7 @@ python defense.py --dataset Cora --vs_number 40 --trigger_generator_address './m
 
   
 
-python defense.py --dataset Pubmed --vs_number 160 --trigger_generator_address './model_weights_pubmed.pth' --poison_x 'poison_x_pubmed.pt' --poison_edge_index 'poison_edge_index_pubmed.pt' --poison_edge_weights 'poison_edge_weights_pubmed.pt' --poison_labels 'poison_labels_pubmed.pt' --idx_attach 'PubMed_DPGBA.txt'
+    python defense.py --dataset Pubmed --vs_number 160 --trigger_generator_address './model_weights_pubmed.pth' --poison_x 'poison_x_pubmed.pt' --poison_edge_index 'poison_edge_index_pubmed.pt' --poison_edge_weights 'poison_edge_weights_pubmed.pt' --poison_labels 'poison_labels_pubmed.pt' --idx_attach 'PubMed_DPGBA.txt'
 
   
 
@@ -32,7 +32,7 @@ python defense.py --dataset Pubmed --vs_number 160 --trigger_generator_address '
 
   
 
-python defense.py --dataset ogbn-arxiv --vs_number 565 --trigger_generator_address './model_weights_arxiv.pth' --poison_x 'poison_x_arxiv.pt' --poison_edge_index 'poison_edge_index_arxiv.pt' --poison_edge_weights 'poison_edge_weights_arxiv.pt' --poison_labels 'poison_labels_arxiv.pt' --idx_attach 'OGBArxiv_UGBA.txt'
+    python defense.py --dataset ogbn-arxiv --vs_number 565 --trigger_generator_address './model_weights_arxiv.pth' --poison_x 'poison_x_arxiv.pt' --poison_edge_index 'poison_edge_index_arxiv.pt' --poison_edge_weights 'poison_edge_weights_arxiv.pt' --poison_labels 'poison_labels_arxiv.pt' --idx_attach 'OGBArxiv_UGBA.txt'
 
 
 If you find this repo to be useful, please consider cite our paper. Thank you.
